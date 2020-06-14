@@ -81,7 +81,7 @@ export const TokenInfoArray = [
             "decimals": 18
         },'TRB': {
             "token_symbol":"TRB",
-            "token_contract_address":"0x4DBCdF9B62e891a7cec5A2568C3F4FAF9E8Abe2b",
+            "token_contract_address":"0xFe41Cb708CD98C5B20423433309E55b53F79134a",
             "decimals": 18
         },
         // 'ETH': {
@@ -106,7 +106,7 @@ export const TokenInfoArray = [
         },
         'DAI-TRB': {
             "token_symbol":"pair",
-            "token_contract_address":"0x80ba6fad89faB001CF7e369179a5F418A8d5aA7f",
+            "token_contract_address":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
             "decimals": 18
         }
         // 'DAI-WETH': {
@@ -133,7 +133,7 @@ export const TokenInfoArray = [
             "token0":"DAI",
             "token1": "ZRX"
         },'DAI-TRB': {
-            "pairaddress":"0x2084b246D7455E973F646Eac00D655541F50aD61",
+            "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
             "token0":"DAI",
             "token1": "TRB"
         },

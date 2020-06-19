@@ -4,19 +4,25 @@
     "description": "",
     "main": "index.js",
     "dependencies": {
+        "@material-ui/core": "^4.10.2",
+        "@material-ui/icons": "^4.9.1",
         "@uniswap/sdk": "^2.0.3",
+        "@zeit/next-css": "^1.0.1",
+        "@zeit/next-sass": "^1.0.1",
         "axios": "^0.19.2",
         "bignumber.js": "^9.0.0",
         "bootstrap": "^4.5.0",
-        "css-loader": "^3.5.3",
+        "css-loader": "^3.6.0",
         "next": "^9.1.5",
         "next-routes": "^1.4.2",
+        "node-sass": "^4.14.1",
         "openzeppelin-solidity": "^2.4.0",
         "react": "^16.8.6",
         "react-bootstrap": "^1.0.1",
         "react-dom": "^16.8.6",
         "react-scripts": "3.0.0",
         "react-toastify": "^6.0.2",
+        "sass": "^1.26.8",
         "semantic-ui-react": "^0.88.2",
         "solc": "^0.5.12",
         "truffle-hdwallet-provider": "0.0.3",
@@ -38,5 +44,11 @@
     "bugs": {
         "url": "https://github.com/sunnyRK/awesome-maker/issues"
     },
-    "homepage": "https://github.com/sunnyRK/awesome-maker#readme"
+    "homepage": "https://github.com/sunnyRK/awesome-maker#readme",
+    "devDependencies": {
+        "eslint": "^7.2.0",
+        "eslint-config-airbnb": "^18.1.0",
+        "eslint-plugin-import": "^2.21.2",
+        "eslint-plugin-react": "^7.20.0"
+    }
 }

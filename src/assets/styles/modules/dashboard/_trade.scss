@@ -1,0 +1,36 @@
+.trade {
+  padding: 60px 120px !important;
+  @media (max-width: 750px) {
+    padding: 30px 40px !important;
+  }
+  .pair-options {
+    height: 45px;
+    img {
+      height: 25px !important;
+      width: 25px !important;
+    }
+  }
+  .pair-input {
+    // width: 100%;
+    height: 45px;
+    .pair-input-dropdown {
+      width: 105px;
+      justify-content: center;
+    }
+  }
+  .trade-footer {
+    display: flex;
+    justify-content: flex-end;
+    > button {
+      width: 180px;
+      height: 45px;
+      margin-right: 16px;
+      @media (max-width: 380px) {
+        height: 50px;
+      }
+      &:last-child {
+        margin-right: 0;;
+      }
+    }
+  }
+}

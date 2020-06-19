@@ -1,0 +1,62 @@
+.dashboard {
+  display: flex;
+  padding: 30px 60px;
+  height: 100%;
+  .dashboard-content {
+    width: 70%;
+    margin-right: 40px;
+  }
+  .profile-actions-container {
+    width: 30%;
+    .profile-actions {
+      // padding: 0 8px;
+      .address {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 600;
+      }
+      .check-liquidity {
+        .check-liquidity-dropdown {
+          margin: 0 0 20px 0;
+        }
+        .card {
+          background-color: #efefef;
+          h4 {
+            // color: #90bed4 !important;
+            color: #22739a !important;
+          }
+          // .current-balance {
+          //   .token-balance {
+          //     margin: 0 0 15px;
+          //     font-size: 1.6rem;
+          //     font-weight: 600;
+          //     line-height: 1.6rem;
+          //     color: dodgerblue;
+          //   }
+          // }
+        }
+      }
+    }
+  }
+
+  .total {
+    display: flex;
+    justify-content: flex-end;
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+
+  }
+
+  @media(max-width: 850px) {
+    flex-direction: column;
+    padding: 30px;
+    .dashboard-content, .profile-actions-container {
+      width: 100%;
+    }
+  }
+}
+
+@media(max-width: 650px) {
+  
+}

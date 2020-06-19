@@ -1,0 +1,74 @@
+.liquidity {
+  .add-liquidity {
+    margin: 10px 0 20px 0;
+    padding: 60px 120px !important;
+    @media (max-width: 750px) {
+      padding: 30px !important;
+    }
+    .liquidity-pairs {
+      height: 48px;
+      img {
+        height: 25px !important;
+        width: 25px !important;
+      }
+    }
+    .add-liquidity-footer {
+      display: flex;
+      justify-content: flex-end;
+      > button {
+        width: 180px;
+        height: 45px;
+        margin-right: 16px;
+        @media (max-width: 750px) {
+          height: 50px;
+        }
+        &:last-child {
+          margin-right: 0;;
+        }
+      }
+    }
+  }
+  .remove-liquidity {
+    padding: 60px 120px !important;
+    @media (max-width: 780px) {
+      padding: 30px !important;
+    }
+    .pool-wrapper {
+      display: flex;
+      @media (max-width: 625px) {
+        display: block;
+      }
+      > .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 16px;
+        &.set-max-button {
+          width: 130px;
+          .form-control {
+            justify-content: center;
+          }
+        }
+      }
+      .pool-dropdown {
+        width: 180px;
+        justify-content: center;
+      }
+    }
+    .remove-liquidity-footer {
+      display: flex;
+      justify-content: flex-end;
+      > button {
+        width: 180px;
+        height: 45px;
+        margin-right: 16px;
+        @media (max-width: 780px) {
+          height: 50px;
+        }
+        &:last-child {
+          margin-right: 0;;
+        }
+      }
+    }
+  }
+}

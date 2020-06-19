@@ -1,3 +1,8 @@
+import EthIcon from '../../src/assets/icons/eth.svg';
+import DaiIcon from '../../src/assets/icons/dai.svg';
+import TrbIcon from '../../src/assets/icons/trb.png';
+import BatIcon from '../../src/assets/icons/bat.svg';
+import ZrxIcon from '../../src/assets/icons/zrx.svg';
 
 // Tellor Oracle Instance
 export function getTellorOracle(web3) {
@@ -153,19 +158,31 @@ export const TokenInfoArray = [
   export const tagOptions = [
     {
         key: 'DAI-BAT',
-        text: 'DAI-BAT',
+        text: (
+            <div className="token-pairs-overlap">
+              <img src={DaiIcon} className="ui avatar image" alt="coin" />
+              <img src={BatIcon} className="ui avatar image overlap-image" alt="coin" /> DAI - BAT
+            </div>
+          ),
         value: 'DAI-BAT',
-        label: { color: 'red', empty: true, circular: true },
     },{
         key: 'DAI-ZRX',
-        text: 'DAI-ZRX',
+        text: (
+            <div className="token-pairs-overlap">
+              <img src={DaiIcon} className="ui avatar image" alt="coin" />
+              <img src={ZrxIcon} className="ui avatar image  overlap-image" alt="coin" /> DAI - ZRX
+            </div>
+          ),
         value: 'DAI-ZRX',
-        label: { color: 'pink', empty: true, circular: true },
     },{
         key: 'DAI-TRB',
-        text: 'DAI-TRB',
+        text: (
+            <div className="token-pairs-overlap">
+              <img src={DaiIcon} className="ui avatar image" alt="coin" />
+              <img src={TrbIcon} className="ui avatar image  overlap-image" alt="coin" /> DAI - TRB
+            </div>
+          ),
         value: 'DAI-TRB',
-        label: { color: 'blue', empty: true, circular: true },
     }
     // ,{
     //     key: 'DAI-ETH',

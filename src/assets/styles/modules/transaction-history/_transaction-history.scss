@@ -1,0 +1,23 @@
+.transaction-history-wrapper {
+  max-height: 910px;
+  overflow-y: auto;
+  .cards {
+    width: 100%;
+  }
+  .sub-heading {
+    font-weight: bold;
+  }
+  .token-pair-address {
+    margin-top: 10px;
+  }
+  .transaction-address {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+  }
+  .description {
+    margin-top: 10px;
+    font-weight: 500;
+  }
+}

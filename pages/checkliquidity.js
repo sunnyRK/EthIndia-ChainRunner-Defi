@@ -6,8 +6,7 @@ import {
   getUniswapV2Pair,
   PairInfoArray,
   getERCContractInstanceWithoutSymbol,
-  tagOptions
-
+  tagOptions,
 } from '../config/instances/contractinstances';
 import { ToastContainer, toast } from 'react-toastify';
 

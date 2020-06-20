@@ -225,18 +225,6 @@ export const TokenInfoArray = [
             </div>
           ),
         value: 'WETH-ZRX',
-    }
-    // ,{
-    //     key: 'DAI-ETH',
-    //     text: 'DAI-ETH',
-    //     value: 'DAI-ETH',
-    //     label: { color: 'green', empty: true, circular: true },
-    // },
-    // {
-    //     key: 'TRB-ETH',
-    //     text: 'TRB-ETH',
-    //     value: 'TRB-ETH',
-    //     label: { color: 'yellow', empty: true, circular: true },
-    // }    
+    } 
   ];
   

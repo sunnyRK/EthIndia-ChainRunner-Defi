@@ -7,6 +7,8 @@ import DaiIcon from '../../../assets/icons/dai.svg';
 import TrbIcon from '../../../assets/icons/trb.png';
 import BatIcon from '../../../assets/icons/bat.svg';
 import ZrxIcon from '../../../assets/icons/zrx.svg';
+import EthIcon from '../../../assets/icons/eth.png';
+
 import {
   getUniswapV2Pair,
   getUniswapV2Router02,
@@ -36,6 +38,10 @@ const Tokens = [
   {
     value: 'ZRX',
     image: ZrxIcon,
+  },
+  {
+    value: 'WETH',
+    image: EthIcon,
   },
 ];
 
@@ -251,7 +257,7 @@ class TradeContainer extends Component {
       {
         key: PairInfoArray[0][value].token0,
         text: (
-          <div>
+          <div className="align-items">
             <img
               src={
               Tokens.find((token) => token.value === PairInfoArray[0][value].token0).image
@@ -267,7 +273,7 @@ class TradeContainer extends Component {
       {
         key: PairInfoArray[0][value].token1,
         text: (
-          <div>
+          <div className="align-items">
             <img
               src={
               Tokens.find((token) => token.value === PairInfoArray[0][value].token1).image
@@ -337,11 +343,11 @@ class TradeContainer extends Component {
       tradePairTokens: '',
       amountSwapDesired: '',
       amountOut: '',
-      tellorRate:'',
+      tellorRate: '',
       slippage: '',
       amountInBalanceText: '0',
       token0: '',
-      token1: ''
+      token1: '',
     });
   }
 

@@ -11,6 +11,7 @@ import {
   PairInfoArray,
   tagOptions,
 } from '../../../../config/instances/contractinstances';
+const BN = require('bignumber.js');
 
 class LiquidityContainer extends Component {
   constructor(props) {
@@ -108,9 +109,12 @@ class LiquidityContainer extends Component {
       const erc20ContractInstance2 = await getERCContractInstance(web3, this.state.liquidityToken1);
       const balance0 = await erc20ContractInstance1.methods.balanceOf(accounts[0]).call();
       const balance1 = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
-      console.log('balance1: ', balance1);
+      console.log('balance0: ', balance0/1e18);
+      console.log('balance00: ', this.state.addLiquidityamount0);
+      console.log('balance1: ', balance1/1e18);
+      console.log('balance11: ', this.state.addLiquidityamount1);
       if (parseInt(balance0) >= parseInt(this.state.addLiquidityamount0) && parseInt(this.state.addLiquidityamount0) > parseInt(this.state.minValue)) {
-        if (parseInt(balance1) >= parseInt(this.state.addLiquidityamount1) && parseInt(this.state.addLiquidityamount1) > parseInt(this.state.minValue)) {
+        if (parseInt(balance1) >= parseInt(this.state.addLiquidityamount1) && parseFloat(this.state.addLiquidityamount1) > parseInt(this.state.minValue)) {
           const allowanceToken0 = await erc20ContractInstance1.methods.allowance(accounts[0], this.state.routeraddress).call();
           const allowanceToken1 = await erc20ContractInstance2.methods.allowance(accounts[0], this.state.routeraddress).call();
           if (parseInt(allowanceToken0) < parseInt(this.state.addLiquidityamount0)) {
@@ -130,12 +134,12 @@ class LiquidityContainer extends Component {
               from: accounts[0],
             });
           }
-
           const routeContractInstance = await getUniswapV2Router02(web3);
-
           await routeContractInstance.methods.addLiquidity(
             TokenInfoArray[0][this.state.liquidityToken0].token_contract_address,
             TokenInfoArray[0][this.state.liquidityToken1].token_contract_address,
+            // new BN(parseInt(this.state.addLiquidityamount0)).times(10 ** 18),
+            // new BN(parseInt(this.state.addLiquidityamount1)).times(10 ** 18),
             parseInt(this.state.addLiquidityamount0),
             parseInt(this.state.addLiquidityamount1),
             this.state.minValue,
@@ -181,14 +185,26 @@ class LiquidityContainer extends Component {
     const token0Price = parseInt(price1[1]) / 1000000;
     const token1Price = parseInt(price2[1]) / 1000000;
 
-    const token0Quantity = (token0Price * 1e18) * (parseInt(this.state.addLiquidityamount0));
+    // const token0Quantity = (token0Price * 1e18) * (parseInt(this.state.addLiquidityamount0));
 
-    const token1Quantity = (token0Quantity * 1e18) / (token1Price * 1e18);
+    // const token1Quantity = (token0Quantity * 1e18) / (token1Price * 1e18);
 
-    console.log(`${token1Quantity / 1e18} --- ${token1Quantity}`);
+    const token0Quantity = (token0Price) * (parseInt(this.state.addLiquidityamount0));
+    console.log(token0Quantity)
+
+    const token1Quantity = (token0Quantity) / (token1Price);
+    console.log(token1Quantity)
+
+    
+    console.log(`${token1Quantity} --- ${token1Quantity}`);
     this.setState({
-      addLiquidityamount1: token1Quantity / 1e18,
+      addLiquidityamount1: token1Quantity,
     });
+
+    // console.log(`${token1Quantity / 1e18} --- ${token1Quantity}`);
+    // this.setState({
+    //   addLiquidityamount1: token1Quantity / 1e18,
+    // });
   }
 
   handleLiquidityPairs = async (e, { value }) => {

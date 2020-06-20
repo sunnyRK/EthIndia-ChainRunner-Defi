@@ -40,7 +40,7 @@ const Liquidity = ({
           onChange={handleInputPair}
           fluid
         />
-        <label className="total">Total {liquidityToken0} Balance:{amountInBalanceText1}({amountInBalanceText1/1000000000000000000}) in WEI</label>
+        <label className="total">Total {liquidityToken0} Balance: {amountInBalanceText1}({amountInBalanceText1/1000000000000000000}) in WEI</label>
       </div>
       <div className="form-field">
         <label>token1</label>
@@ -57,7 +57,7 @@ const Liquidity = ({
           }}
           disabled
         />
-        <label className="total">Total {liquidityToken1} Balance:{amountInBalanceText1}({amountInBalanceText2/1000000000000000000}) in WEI</label>
+        <label className="total">Total {liquidityToken1} Balance: {amountInBalanceText2}({amountInBalanceText2/1000000000000000000}) in WEI</label>
       </div>
       <div className="form-field button add-liquidity-footer">
         <Button
@@ -110,7 +110,7 @@ const Liquidity = ({
               });
             }}
           />
-          <label className="total">Total Your PoolBalance(Uni-V2-{removeTokenPair}):{removeLiquidityTokenAmount}({removeLiquidityTokenAmount/1000000000000000000}) in WEI</label>
+          <label className="total">Total Your PoolBalance(Uni-V2-{removeTokenPair}):  {removeLiquidityTokenAmount} in WEI</label>
         </div>
         <div className="button form-field set-max-button">
           <Button

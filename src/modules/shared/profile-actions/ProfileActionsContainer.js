@@ -104,7 +104,7 @@ class ProfileActionsContainer extends Component {
       this.setState({ checkbalanceLoading: false });
     } catch (error) {
       this.setState({ checkbalanceLoading: false });
-      alert(error);
+      console.log(error);
     }
   };
 

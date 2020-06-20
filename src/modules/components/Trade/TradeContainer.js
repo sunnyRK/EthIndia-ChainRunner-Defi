@@ -55,6 +55,7 @@ class TradeContainer extends Component {
       updateLoading: false,
       amountSwapDesired: '',
       amountInBalanceText: '0',
+      reserve0: '0',
       amountOut: '',
       tellorRate: '',
       pairTokens: [],
@@ -66,6 +67,7 @@ class TradeContainer extends Component {
       routeraddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       slippage: '',
       // tellorRate: '',
+      exceeds: false
     };
   }
 
@@ -82,26 +84,26 @@ class TradeContainer extends Component {
     // const price2 = "206000"; //BAT
     // const price2 = "336600"; //ZRX
 
-    const daiPrice = parseInt(price1[1]) / 1000000;
-    const batPrice = parseInt(price2[1]) / 1000000;
+    const token0Price = parseInt(price1[1]) / 1000000;
+    const token1Price = parseInt(price2[1]) / 1000000;
 
-    const daiQuantity = (daiPrice * 1e18) * (parseInt(this.state.amountSwapDesired));
+    const token0Quantity = (token0Price * 1e18) * (parseInt(this.state.amountSwapDesired));
 
-    const batQuantity = (daiQuantity * 1e18) / (batPrice * 1e18);
+    const token1Quantity = (token0Quantity * 1e18) / (token1Price * 1e18);
 
-    const difference = batQuantity / 1e18 - this.state.amountOut;
+    const difference = token1Quantity / 1e18 - this.state.amountOut;
     console.log('difference ', difference);
 
     const numerator = difference * 100;
     console.log('numerator ', numerator);
 
-    const slippage = numerator / (batQuantity / 1e18);
+    const slippage = numerator / (token1Quantity / 1e18);
     console.log('slippage is ', slippage);
 
     const slippage2 = `${slippage} %`;
     this.setState({
       slippage: slippage2,
-      tellorRate: batQuantity / 1e18
+      tellorRate: token1Quantity / 1e18
     });
   }
 
@@ -109,26 +111,44 @@ class TradeContainer extends Component {
     console.log(this.state.pairAddress);
     const pairInstance = await getUniswapV2Pair(web3, this.state.pairAddress);
     const reserves = await pairInstance.methods.getReserves().call();
-    console.log(reserves);
-    const token0V2Pair = await pairInstance.methods.token0().call();
-    const token1V2Pair = await pairInstance.methods.token1().call();
-    const libInstance = await getUniswapV2Library(web3);
-    // // const amountIn = await libInstance.methods.getAmountIn("100","91566","70966").call();
-    // // it gives reserves[1] value
-    let amountOut;
-    console.log(token0V2Pair, TokenInfoArray[0][this.state.token0].token_contract_address);
-    if (token0V2Pair.toLowerCase() == TokenInfoArray[0][this.state.token0].token_contract_address.toLowerCase()) {
-      console.log(this.state.amountSwapDesired, reserves[0], reserves[1], '1');
-      amountOut = await libInstance.methods.getAmountOut(this.state.amountSwapDesired, reserves[0], reserves[1]).call();
+    console.log("reserves: ",reserves);
+
+    if(parseInt(reserves[0]) < parseInt(this.state.amountSwapDesired))
+    {
+      this.setState({
+        exceeds: true
+      });
+      alert("Value exceeds the liquidity! ")
     } else {
-      console.log(this.state.amountSwapDesired, reserves[1], reserves[0], '2');
-      amountOut = await libInstance.methods.getAmountOut(this.state.amountSwapDesired, reserves[1], reserves[0]).call();
+      this.setState({
+        exceeds: false
+      });
     }
-    console.log('amountout ', amountOut);
-    this.setState({
-      amountOut,
-    });
-    await this.calculateSLippageRateFromTellorOracle();
+    
+    if(!this.state.exceeds){
+      this.setState({
+        exceeds: false
+      });
+      const token0V2Pair = await pairInstance.methods.token0().call();
+      const token1V2Pair = await pairInstance.methods.token1().call();
+      const libInstance = await getUniswapV2Library(web3);
+      // // const amountIn = await libInstance.methods.getAmountIn("100","91566","70966").call();
+      // // it gives reserves[1] value
+      let amountOut;
+      console.log(token0V2Pair, TokenInfoArray[0][this.state.token0].token_contract_address);
+      if (token0V2Pair.toLowerCase() == TokenInfoArray[0][this.state.token0].token_contract_address.toLowerCase()) {
+        console.log(this.state.amountSwapDesired, reserves[0], reserves[1], '1');
+        amountOut = await libInstance.methods.getAmountOut(this.state.amountSwapDesired, reserves[0], reserves[1]).call();
+      } else {
+        console.log(this.state.amountSwapDesired, reserves[1], reserves[0], '2');
+        amountOut = await libInstance.methods.getAmountOut(this.state.amountSwapDesired, reserves[1], reserves[0]).call();
+      }
+      console.log('amountout ', amountOut);
+      this.setState({
+        amountOut,
+      });
+      await this.calculateSLippageRateFromTellorOracle();
+    }
   }
 
   swapExactTokensForTokens = async () => {
@@ -137,111 +157,116 @@ class TradeContainer extends Component {
       this.setState({ shouldSwap: false, tradeLoading: true });
 
       // check if token is selelcted?
-      if (this.state.token0 != '') {
-        // check if trade value is added?
-        if (parseInt(this.state.amountSwapDesired) > 0) {
-          const accounts = await web3.eth.getAccounts();
+      if(!this.state.exceeds){
+        if (this.state.token0 != '') {
+          // check if trade value is added?
+          if (parseInt(this.state.amountSwapDesired) > 0) {
+            const accounts = await web3.eth.getAccounts();
 
-          if (parseInt(this.state.amountOut) >= parseInt(this.state.tellorRate)) {
-            // trade directly
-            console.log('All set to go');
-            this.setState({ shouldSwap: true });
-          } else {
-            if (parseInt(this.state.slippage) <= 0.9) {
+            if (parseInt(this.state.amountOut) >= parseInt(this.state.tellorRate)) {
+              // trade directly
+              console.log('All set to go');
               this.setState({ shouldSwap: true });
             } else {
-              console.log('Slippage rate is high');
-              console.log('Slippage rate: ', this.state.slippage);
-            }
+              if (parseInt(this.state.slippage) <= 0.9) {
+                this.setState({ shouldSwap: true });
+              } else {
+                console.log('Slippage rate is high');
+                console.log('Slippage rate: ', this.state.slippage);
+              }
 
-            if (this.state.shouldSwap) {
-              // Trade will happen here
-              this.setState({ shouldSwap: false });
-              const erc20ContractInstance2 = await getERCContractInstance(web3, this.state.token0);
+              if (this.state.shouldSwap) {
+                // Trade will happen here
+                this.setState({ shouldSwap: false });
+                const erc20ContractInstance2 = await getERCContractInstance(web3, this.state.token0);
 
-              // check balance
-              const balance = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
+                // check balance
+                const balance = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
+                if (parseInt(balance) >= parseInt(this.state.amountSwapDesired)) {
+                  let allowance = await erc20ContractInstance2.methods.allowance(accounts[0], this.state.routeraddress).call();
+                  if (parseInt(allowance) < parseInt(this.state.amountSwapDesired)) {
+                    await erc20ContractInstance2.methods.approve(
+                      this.state.routeraddress, // Uniswap router address
+                      this.state.amountSwapDesired,
+                    ).send({
+                      from: accounts[0],
+                    });
+                    allowance = await erc20ContractInstance2.methods.allowance(accounts[0], this.state.routeraddress).call();
+                  }
+                  // check allowance
+                  if (parseInt(allowance) >= parseInt(this.state.amountSwapDesired)) {
+                    const routeContractInstance = await getUniswapV2Router02(web3);
+                    const transactionHash = await routeContractInstance.methods.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+                      this.state.amountSwapDesired,
+                      this.state.minValue,
+                      [TokenInfoArray[0][this.state.token0].token_contract_address, TokenInfoArray[0][this.state.token1].token_contract_address],
+                      accounts[0],
+                      Math.floor(new Date().getTime() / 1000) + 86400,
+                    ).send({
+                      from: accounts[0],
+                    });
+                    // add transation in transaction history
+                    const models = {
+                      transactionHash: transactionHash.transactionHash,
+                      token0: this.state.token0,
+                      token1: this.state.token1,
+                      pairAddress: this.state.pairAddress,
+                      amountIN: this.state.amountSwapDesired,
+                      amountOut: this.state.amountOut,
+                    };
 
-              if (balance >= this.state.amountSwapDesired) {
-                let allowance = await erc20ContractInstance2.methods.allowance(accounts[0], this.state.routeraddress).call();
-                if (parseInt(allowance) < parseInt(this.state.amountSwapDesired)) {
-                  await erc20ContractInstance2.methods.approve(
-                    this.state.routeraddress, // Uniswap router address
-                    this.state.amountSwapDesired,
-                  ).send({
-                    from: accounts[0],
-                  });
-                  allowance = await erc20ContractInstance2.methods.allowance(accounts[0], this.state.routeraddress).call();
-                }
-                // check allowance
-                if (parseInt(allowance) >= parseInt(this.state.amountSwapDesired)) {
-                  const routeContractInstance = await getUniswapV2Router02(web3);
-                  const transactionHash = await routeContractInstance.methods.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                    this.state.amountSwapDesired,
-                    this.state.minValue,
-                    [TokenInfoArray[0][this.state.token0].token_contract_address, TokenInfoArray[0][this.state.token1].token_contract_address],
-                    accounts[0],
-                    Math.floor(new Date().getTime() / 1000) + 86400,
-                  ).send({
-                    from: accounts[0],
-                  });
-                  // add transation in transaction history
-                  const models = {
-                    transactionHash: transactionHash.transactionHash,
-                    token0: this.state.token0,
-                    token1: this.state.token1,
-                    pairAddress: this.state.pairAddress,
-                    amountIN: this.state.amountSwapDesired,
-                    amountOut: this.state.amountOut,
-                  };
+                    // Axios.post('https://instcrypt-node-api.herokuapp.com/api/createProgram', models)
+                    Axios.post('https://instcrypt-node-api.herokuapp.com/api/createTrade', models)
+                      .then((res) => {
+                        if (res.statusText == 'OK') {
+                        } else {
+                          console.log(res);
+                        }
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                        this.setState({ shouldSwap: false, tradeLoading: false });
+                      });
 
-                  // Axios.post('https://instcrypt-node-api.herokuapp.com/api/createProgram', models)
-                  Axios.post('https://instcrypt-node-api.herokuapp.com/api/createTrade', models)
-                    .then((res) => {
-                      if (res.statusText == 'OK') {
-                      } else {
-                        console.log(res);
-                      }
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                      this.setState({ shouldSwap: false, tradeLoading: false });
+                    console.log(transactionHash);
+                    toast.success('Trade Successful and transaction added to transaction history!!', {
+                      position: toast.POSITION.TOP_RIGHT,
                     });
 
-                  console.log(transactionHash);
-                  toast.success('Trade Successful and transaction added to transaction history!!', {
-                    position: toast.POSITION.TOP_RIGHT,
-                  });
-
-                  toast.success(`Transaction Hash: ${transactionHash.blockHash}`, {
-                    position: toast.POSITION.TOP_RIGHT,
-                  });
+                    toast.success(`Transaction Hash: ${transactionHash.blockHash}`, {
+                      position: toast.POSITION.TOP_RIGHT,
+                    });
+                  } else {
+                    // Insufficeient allowance
+                    toast.error(`${this.state.token0} allowance is not given perfectly. Please Try again!`, {
+                      position: toast.POSITION.TOP_RIGHT,
+                    });
+                  }
                 } else {
-                  // Insufficeient allowance
-                  toast.error(`${this.state.token0} allowance is not given perfectly. Please Try again!`, {
+                  // Insufficeient balance
+                  toast.error(`Insufficeient ${this.state.token0} balance!`, {
                     position: toast.POSITION.TOP_RIGHT,
                   });
                 }
               } else {
-                // Insufficeient balance
-                toast.error(`Insufficeient ${this.state.token0} balance!`, {
+                // Slippage rate is high so trade will not be happen
+                toast.error('Swap will not be perform, Slippage rate is high!', {
                   position: toast.POSITION.TOP_RIGHT,
                 });
               }
-            } else {
-              // Slippage rate is high so trade will not be happen
-              toast.error('Swap will not be perform, Slippage rate is high!', {
-                position: toast.POSITION.TOP_RIGHT,
-              });
             }
+          } else {
+            toast.error('Please add valid value!!', {
+              position: toast.POSITION.TOP_RIGHT,
+            });
           }
         } else {
-          toast.error('Please add valid value!!', {
+          toast.error('Please select trade pair and token', {
             position: toast.POSITION.TOP_RIGHT,
           });
         }
       } else {
-        toast.error('Please select trade pair and token', {
+        toast.error(`Value ${this.state.amountSwapDesired} exceeds liquidity. Please decrease the value!`, {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
@@ -292,13 +317,17 @@ class TradeContainer extends Component {
     const erc20ContractInstance2 = await getERCContractInstance(web3, PairInfoArray[0][value].token0);
     const amountInBalanceText = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
 
+    const pairInstance = await getUniswapV2Pair(web3, PairInfoArray[0][value].pairaddress);
+    const reserves = await pairInstance.methods.getReserves().call();
+
     this.setState({
       tradePairTokens: value,
       pairTokens: pair,
       token0: PairInfoArray[0][value].token0,
       token1: PairInfoArray[0][value].token1,
       pairAddress: PairInfoArray[0][value].pairaddress,
-      amountInBalanceText
+      amountInBalanceText,
+      reserve0: reserves[0],
     });
   };
 
@@ -313,6 +342,8 @@ class TradeContainer extends Component {
     const accounts = await web3.eth.getAccounts();
     const erc20ContractInstance2 = await getERCContractInstance(web3, value);
     const amountInBalanceText = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
+
+    
 
     this.setState({ token0: value, token1: tempToken2, amountInBalanceText });
   };
@@ -348,13 +379,14 @@ class TradeContainer extends Component {
       amountInBalanceText: '0',
       token0: '',
       token1: '',
+      reserve0: '0',
     });
   }
 
   render() {
     const {
       tradePairTokens, pairTokens, amountSwapDesired,
-      tradeLoading, amountOut, slippage, tellorRate, amountInBalanceText, token0
+      tradeLoading, amountOut, slippage, tellorRate, amountInBalanceText, token0, reserve0
     } = this.state;
     return (
       <Trade
@@ -374,6 +406,7 @@ class TradeContainer extends Component {
         onClearClick={this.onClearClick}
         amountInBalanceText={amountInBalanceText}
         token0={token0}
+        reserve0={reserve0}
       />
     );
   }

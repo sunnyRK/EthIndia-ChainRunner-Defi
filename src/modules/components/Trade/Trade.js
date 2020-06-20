@@ -5,7 +5,7 @@ const Trade = ({
   swapExactTokensForTokens, tradePairTokens, tagOptions,
   handlePairs, pairTokens, handlePairTokens, amountSwapDesired,
   handleInputPrice, tradeLoading, amountOut, slippage, handleState,
-  onClearClick, tellorRate, amountInBalanceText, token0,
+  onClearClick, tellorRate, amountInBalanceText, token0, reserve0
 }) => (
   <div className="card trade">
     <h3>For Traders</h3>
@@ -42,7 +42,9 @@ const Trade = ({
         value={amountSwapDesired}
         onChange={handleInputPrice}
       />
-      <label className="total">Total {token0} Balance:{amountInBalanceText}({amountInBalanceText/1000000000000000000}) in WEI</label>
+      <label className="total">Total {token0} Balance: {amountInBalanceText}({amountInBalanceText/1000000000000000000}) in WEI</label>
+      <label className="total">Total {token0} Liquidity: {reserve0} in WEI</label>
+
     </div>
     <div className="form-field">
       <label>Amount out</label>

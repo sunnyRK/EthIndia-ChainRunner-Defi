@@ -142,19 +142,19 @@ export const TokenInfoArray = [
             "token0":"DAI",
             "token1": "TRB"
         },'DAI-WETH': {
-            "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
+            "pairaddress":"0x03E6c12eF405AC3F642B9184eDed8E1322de1a9e",
             "token0":"DAI",
             "token1": "WETH"
         },'TRB-WETH': {
-            "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
+            "pairaddress":"0x23DcB4EC60C2eC19131A5022b6B6dA1c7E6b7bEF",
             "token0":"TRB",
             "token1": "WETH"
         },'ZRX-TRB': {
-            "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
+            "pairaddress":"0xAA9D0d9FbE9D88cD0D73d26D789c431d36Abb153",
             "token0":"ZRX",
             "token1": "TRB"
         },'WETH-ZRX': {
-            "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
+            "pairaddress":"0x869e10916560F2c4878C03DAD091F6b54De5c033",
             "token0":"WETH",
             "token1": "ZRX"
         }

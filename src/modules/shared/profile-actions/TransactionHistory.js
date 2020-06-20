@@ -11,7 +11,7 @@ class Transaction extends Component {
     }
 
     async componentDidMount() {
-      Axios.get('http://localhost:4000/api/getAllTrades')
+      Axios.get('https://instcrypt-node-api.herokuapp.com/api/getAllTrades')
         .then((res) => {
           if (res.statusText == 'OK') {
             const items = [];
@@ -19,7 +19,7 @@ class Transaction extends Component {
               for (let j = 0; j < res.data.length; j++) {
                 const TransactionDetails = res.data[j];
                 //   console.log(TransactionDetails);
-                const hashLink = `https://ropsten.etherscan.io/tx/${TransactionDetails.transactionHash}`;
+                const hashLink = `https://rinkeby.etherscan.io/tx/${TransactionDetails.transactionHash}`;
                 items[j] = {
                   header: (
                     <>

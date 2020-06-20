@@ -8,7 +8,7 @@ const Trade = ({
   onClearClick, tellorRate, amountInBalanceText, token0, reserve0
 }) => (
   <div className="card trade">
-    <h3>For Traders</h3>
+    <h3>Automate Trade</h3>
     <div className="form-field">
       <label>Select Pair</label>
       <Dropdown

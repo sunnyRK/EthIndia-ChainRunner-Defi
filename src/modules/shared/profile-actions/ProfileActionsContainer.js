@@ -22,6 +22,7 @@ class ProfileActionsContainer extends Component {
       symbol1: '',
       reserve0: '0',
       reserve1: '0',
+      metamaskAddress: ''
     };
   }
 
@@ -60,6 +61,7 @@ class ProfileActionsContainer extends Component {
       reserve1: res1,
       symbol0,
       symbol1,
+      metamaskAddress: accounts[0]
     });
   }
 
@@ -113,7 +115,7 @@ class ProfileActionsContainer extends Component {
   };
 
   render() {
-    const { reserve1, reserve0, symbol1, symbol0, checkPairBalance, checkPairAddress } = this.state;
+    const { reserve1, reserve0, symbol1, symbol0, checkPairBalance, checkPairAddress, metamaskAddress } = this.state;
     return (
       <ProfileActions
         options={tagOptions}
@@ -124,6 +126,7 @@ class ProfileActionsContainer extends Component {
         checkPairBalance={checkPairBalance}
         checkPairAddress={checkPairAddress}
         handlecheckPairs={this.handlecheckPairs}
+        metamaskAddress={metamaskAddress}
       />
     );
   }

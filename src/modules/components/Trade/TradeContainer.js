@@ -48,7 +48,9 @@ class TradeContainer extends Component {
       removeLiquidityLoading: false,
       updateLoading: false,
       amountSwapDesired: '',
+      amountInBalanceText: '0',
       amountOut: '',
+      tellorRate: '',
       pairTokens: [],
       token0: '',
       token1: '',
@@ -57,7 +59,7 @@ class TradeContainer extends Component {
       pairAddress: '',
       routeraddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       slippage: '',
-      consultPrice: '',
+      // tellorRate: '',
     };
   }
 
@@ -93,7 +95,7 @@ class TradeContainer extends Component {
     const slippage2 = `${slippage} %`;
     this.setState({
       slippage: slippage2,
-      consultPrice: batQuantity / 1e18,
+      tellorRate: batQuantity / 1e18
     });
   }
 
@@ -134,7 +136,7 @@ class TradeContainer extends Component {
         if (parseInt(this.state.amountSwapDesired) > 0) {
           const accounts = await web3.eth.getAccounts();
 
-          if (parseInt(this.state.amountOut) >= parseInt(this.state.consultPrice)) {
+          if (parseInt(this.state.amountOut) >= parseInt(this.state.tellorRate)) {
             // trade directly
             console.log('All set to go');
             this.setState({ shouldSwap: true });
@@ -244,7 +246,7 @@ class TradeContainer extends Component {
     }
   };
 
-  handlePairs = (e, { value }) => {
+  handlePairs = async (e, { value }) => {
     const pair = [
       {
         key: PairInfoArray[0][value].token0,
@@ -280,23 +282,33 @@ class TradeContainer extends Component {
       },
     ];
 
+    const accounts = await web3.eth.getAccounts();
+    const erc20ContractInstance2 = await getERCContractInstance(web3, PairInfoArray[0][value].token0);
+    const amountInBalanceText = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
+
     this.setState({
       tradePairTokens: value,
       pairTokens: pair,
       token0: PairInfoArray[0][value].token0,
       token1: PairInfoArray[0][value].token1,
       pairAddress: PairInfoArray[0][value].pairaddress,
+      amountInBalanceText
     });
   };
 
-  handlePairTokens = (e, { value }) => {
+  handlePairTokens = async (e, { value }) => {
     let tempToken2;
     if (value != this.state.token0) {
       tempToken2 = this.state.token0;
     } else {
       tempToken2 = this.state.token1;
     }
-    this.setState({ token0: value, token1: tempToken2 });
+
+    const accounts = await web3.eth.getAccounts();
+    const erc20ContractInstance2 = await getERCContractInstance(web3, value);
+    const amountInBalanceText = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
+
+    this.setState({ token0: value, token1: tempToken2, amountInBalanceText });
   };
 
   handleInputPrice = async (e, { value }) => {
@@ -304,6 +316,7 @@ class TradeContainer extends Component {
       this.setState({
         amountSwapDesired: event.target.value,
         amountOut: 'Wait...',
+        tellorRate: 'Wait...',
         slippage: 'Wait...',
       });
       // const amountOut =
@@ -324,14 +337,18 @@ class TradeContainer extends Component {
       tradePairTokens: '',
       amountSwapDesired: '',
       amountOut: '',
+      tellorRate:'',
       slippage: '',
+      amountInBalanceText: '0',
+      token0: '',
+      token1: ''
     });
   }
 
   render() {
     const {
       tradePairTokens, pairTokens, amountSwapDesired,
-      tradeLoading, amountOut, slippage,
+      tradeLoading, amountOut, slippage, tellorRate, amountInBalanceText, token0
     } = this.state;
     return (
       <Trade
@@ -342,12 +359,15 @@ class TradeContainer extends Component {
         amountSwapDesired={amountSwapDesired}
         tradeLoading={tradeLoading}
         amountOut={amountOut}
+        tellorRate={tellorRate}
         slippage={slippage}
         swapExactTokensForTokens={this.swapExactTokensForTokens}
         handlePairs={this.handlePairs}
         handlePairTokens={this.handlePairTokens}
         handleInputPrice={this.handleInputPrice}
         onClearClick={this.onClearClick}
+        amountInBalanceText={amountInBalanceText}
+        token0={token0}
       />
     );
   }

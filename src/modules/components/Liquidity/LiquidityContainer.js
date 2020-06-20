@@ -16,6 +16,7 @@ class LiquidityContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      addLiquidityPair: '',
       addLiquidityLoading: false,
       removeLiquidityLoading: false,
       routeraddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
@@ -26,6 +27,8 @@ class LiquidityContainer extends Component {
       removeTokenPair: '',
       removeLiquidityTokenAmount: '',
       minValue: 0,
+      amountInBalanceText1: '0',
+      amountInBalanceText2: '0',
     };
   }
 
@@ -188,15 +191,32 @@ class LiquidityContainer extends Component {
     });
   }
 
-  handleLiquidityPairs = (e, { value }) => {
+  handleLiquidityPairs = async (e, { value }) => {
     console.log(PairInfoArray[0][value]);
+
+    const accounts = await web3.eth.getAccounts();
+    const erc20ContractInstance1 = await getERCContractInstance(web3, PairInfoArray[0][value].token0);
+    const erc20ContractInstance2 = await getERCContractInstance(web3, PairInfoArray[0][value].token1);
+    const amountInBalanceText1 = await erc20ContractInstance1.methods.balanceOf(accounts[0]).call();
+    const amountInBalanceText2 = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
     this.setState({
+      addLiquidityPair: value,
       liquidityToken0: PairInfoArray[0][value].token0,
       liquidityToken1: PairInfoArray[0][value].token1,
+      amountInBalanceText1,
+      amountInBalanceText2
     });
   };
 
-  handleRemovePairTokens = (e, { value }) => {
+  handleRemovePairTokens = async (e, { value }) => {
+
+    const accounts = await web3.eth.getAccounts();
+    const erc20ContractInstance1 = await getERCContractInstance(web3, value);
+    const poolTokenBalance = await erc20ContractInstance1.methods.balanceOf(accounts[0]).call();
+    this.setState({
+      removeLiquidityTokenAmount: poolTokenBalance,
+    });
+
     this.setState({
       liquidityToken0: PairInfoArray[0][value].token0,
       liquidityToken1: PairInfoArray[0][value].token1,
@@ -223,10 +243,33 @@ class LiquidityContainer extends Component {
     });
   }
 
+  onClearClickForAdd = () => {
+    this.setState({
+      addLiquidityPair: '',
+      amountInBalanceText1:'',
+      amountInBalanceText2: '',
+      liquidityToken0: '',
+      liquidityToken1: '',
+      addLiquidityamount0: '',
+      addLiquidityamount1: '',
+
+    });
+  }
+
+  onClearClickForRemove = () => {
+    this.setState({
+      removeTokenPair:'',
+      removeLiquidityTokenAmount: '',
+      liquidityToken0: '',
+      liquidityToken1: '',
+    });
+  }
+
   render() {
     const {
-      addLiquidityamount0, addLiquidityamount1, addLiquidityLoading,
-      removeTokenPair, removeLiquidityTokenAmount, removeLiquidityLoading,
+      addLiquidityPair, addLiquidityamount0, addLiquidityamount1, addLiquidityLoading,
+      removeTokenPair, removeLiquidityTokenAmount, removeLiquidityLoading, 
+      amountInBalanceText1, amountInBalanceText2, liquidityToken0, liquidityToken1,
     } = this.state;
     return (
       <Liquidity
@@ -244,6 +287,13 @@ class LiquidityContainer extends Component {
         removeLiquidityLoading={removeLiquidityLoading}
         handleState={this.handleState}
         handleInputPair={this.handleInputPair}
+        amountInBalanceText1={amountInBalanceText1}
+        amountInBalanceText2={amountInBalanceText2}
+        liquidityToken0={liquidityToken0}
+        liquidityToken1={liquidityToken1}
+        onClearClickForAdd={this.onClearClickForAdd}
+        onClearClickForRemove={this.onClearClickForRemove}
+        addLiquidityPair={addLiquidityPair}
       />
     );
   }

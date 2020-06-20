@@ -6,12 +6,13 @@ import {
 } from 'semantic-ui-react';
 
 const Liquidity = ({
-  addLiquidity, tagOptions, handleLiquidityPairs,
+  addLiquidityPair, addLiquidity, tagOptions, handleLiquidityPairs,
   addLiquidityamount0, addLiquidityamount1,
   addLiquidityLoading, selectMax, removeTokenPair,
   handleRemovePairTokens, removeLiquidityTokenAmount,
   removeLiquidity, removeLiquidityLoading, handleState,
-  handleInputPair,
+  handleInputPair, amountInBalanceText1, amountInBalanceText2, 
+  liquidityToken0, liquidityToken1, onClearClickForAdd, onClearClickForRemove
 }) => (
   <div className="liquidity">
     <div className="add-liquidity card">
@@ -20,6 +21,7 @@ const Liquidity = ({
         <label>Pair tokens</label>
         <Dropdown
           className="liquidity-pairs form-control"
+          value={addLiquidityPair}
           options={tagOptions}
           onChange={handleLiquidityPairs}
           fluid
@@ -38,7 +40,7 @@ const Liquidity = ({
           onChange={handleInputPair}
           fluid
         />
-        <label className="total">total will see here</label>
+        <label className="total">Total {liquidityToken0} Balance:{amountInBalanceText1}({amountInBalanceText1/1000000000000000000}) in WEI</label>
       </div>
       <div className="form-field">
         <label>token1</label>
@@ -55,16 +57,17 @@ const Liquidity = ({
           }}
           disabled
         />
-        <label className="total">total will see here</label>
+        <label className="total">Total {liquidityToken1} Balance:{amountInBalanceText1}({amountInBalanceText2/1000000000000000000}) in WEI</label>
       </div>
       <div className="form-field button add-liquidity-footer">
         <Button
-          onClick={() => {
-            handleState({
-              addLiquidityamount0: '',
-              addLiquidityamount1: '',
-            });
-          }}
+          // onClick={() => {
+          //   handleState({
+          //     addLiquidityamount0: '',
+          //     addLiquidityamount1: '',
+          //   });
+          // }}
+          onClick={(event) => onClearClickForAdd(event)}
         >
           Clear
         </Button>
@@ -107,7 +110,7 @@ const Liquidity = ({
               });
             }}
           />
-          <label className="total">total will see here</label>
+          <label className="total">Total Your PoolBalance(Uni-V2-{removeTokenPair}):{removeLiquidityTokenAmount}({removeLiquidityTokenAmount/1000000000000000000}) in WEI</label>
         </div>
         <div className="button form-field set-max-button">
           <Button
@@ -122,12 +125,13 @@ const Liquidity = ({
       </div>
       <div className="form-field button remove-liquidity-footer">
         <Button
-          onClick={() => {
-            handleState({
-              removeTokenPair: '',
-              removeLiquidityTokenAmount: '',
-            });
-          }}
+          onClick={(event) => onClearClickForRemove(event)}
+          // onClick={() => {
+          //   handleState({
+          //     removeTokenPair: '',
+          //     removeLiquidityTokenAmount: '',
+          //   });
+          // }}
         >
           Clear
         </Button>

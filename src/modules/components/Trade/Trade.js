@@ -8,7 +8,7 @@ const Trade = ({
   swapExactTokensForTokens, tradePairTokens, tagOptions,
   handlePairs, pairTokens, handlePairTokens, amountSwapDesired,
   handleInputPrice, tradeLoading, amountOut, slippage, handleState,
-  onClearClick,
+  onClearClick, tellorRate, amountInBalanceText, token0
 }) => (
   <div className="card trade">
     <h3>For Traders</h3>
@@ -30,6 +30,7 @@ const Trade = ({
         className="pair-input form-control"
         label={(
           <Dropdown
+            value={token0}
             options={pairTokens}
             onChange={handlePairTokens}
             className="pair-input-dropdown form-control"
@@ -45,7 +46,7 @@ const Trade = ({
         value={amountSwapDesired}
         onChange={handleInputPrice}
       />
-      <label className="total">total will see here</label>
+      <label className="total">Total {token0} Balance:{amountInBalanceText}({amountInBalanceText/1000000000000000000}) in WEI</label>
     </div>
     <div className="form-field">
       <label>Amount out</label>
@@ -60,17 +61,17 @@ const Trade = ({
       />
     </div>
     <div className="form-field">
-      <label>Tellor Rate %</label>
+      <label>Tellor Rate</label>
       <Input
         type="input"
         className="form-control"
-        // value={amountOut}
-        // onChange={(event) => {
-        //   handleState({ amountOut: event.target.value });
-        // }}
+        value={tellorRate}
+        onChange={(event) => {
+          handleState({ tellorRate: event.target.value });
+        }}
         disabled
       />
-      <label className="total">total will see here</label>
+      {/* <label className="total">total will see here</label> */}
     </div>
     <div className="form-field">
       <label>Slippage Rate %</label>

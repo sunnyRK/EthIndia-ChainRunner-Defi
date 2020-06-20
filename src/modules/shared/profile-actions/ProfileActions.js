@@ -12,7 +12,7 @@ const ProfileActions = ({
   <div className="profile-actions">
     <div className="metamask-info card">
       <h3>Metamask address</h3>
-      <div className="address">{metamaskAddress || '0x2345000234.....'}</div>
+      <div className="address">{metamaskAddress || '0x....'}</div>
     </div>
     <div className="check-liquidity card">
       <h3>Liquidity Check</h3>

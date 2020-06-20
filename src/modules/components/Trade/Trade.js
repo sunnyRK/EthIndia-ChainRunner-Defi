@@ -1,14 +1,11 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import {
-  Button, Input, Dropdown,
-} from 'semantic-ui-react';
+import { Button, Input, Dropdown } from 'semantic-ui-react';
 
 const Trade = ({
   swapExactTokensForTokens, tradePairTokens, tagOptions,
   handlePairs, pairTokens, handlePairTokens, amountSwapDesired,
   handleInputPrice, tradeLoading, amountOut, slippage, handleState,
-  onClearClick, tellorRate, amountInBalanceText, token0
+  onClearClick, tellorRate, amountInBalanceText, token0,
 }) => (
   <div className="card trade">
     <h3>For Traders</h3>
@@ -41,7 +38,6 @@ const Trade = ({
         color="teal"
         type="input"
         fluid
-        // labelPosition="right"
         placeholder="Add value in Wei"
         value={amountSwapDesired}
         onChange={handleInputPrice}

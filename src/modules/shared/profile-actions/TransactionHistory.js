@@ -50,11 +50,17 @@ class Transaction extends Component {
           } else {
             console.log(res);
             alert('Error');
+            this.setState({
+              waitMessage: 'Something went wrong',
+            });
           }
         })
         .catch((err) => {
           console.log(err);
           alert('Catch');
+          this.setState({
+            waitMessage: 'Something went wrong',
+          });
         });
     }
 

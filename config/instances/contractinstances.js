@@ -88,16 +88,11 @@ export const TokenInfoArray = [
             "token_symbol":"TRB",
             "token_contract_address":"0xFe41Cb708CD98C5B20423433309E55b53F79134a",
             "decimals": 18
+        },'WETH': {
+            "token_symbol":"WETH",
+            "token_contract_address":"0xc778417E063141139Fce010982780140Aa0cD5Ab",
+            "decimals": 18
         },
-        // 'ETH': {
-        //     "token_symbol":"ETH",
-        //     "token_contract_address":"0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-        //     "decimals": 18
-        // },'WETH': {
-        //     "token_symbol":"WETH",
-        //     "token_contract_address":"0xc778417E063141139Fce010982780140Aa0cD5Ab",
-        //     "decimals": 18
-        // },
 
         //Token Pairs
         'DAI-BAT': {
@@ -108,22 +103,27 @@ export const TokenInfoArray = [
             "token_symbol":"pair",
             "token_contract_address":"0xb62Dd08D78DD37B6e8019e258c3fe71e3eCF3164",
             "decimals": 18
-        },
-        'DAI-TRB': {
+        },'DAI-TRB': {
             "token_symbol":"pair",
             "token_contract_address":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
             "decimals": 18
+        },'DAI-WETH': {
+            "token_symbol":"pair",
+            "token_contract_address":"0x03E6c12eF405AC3F642B9184eDed8E1322de1a9e",
+            "decimals": 18
+        },'TRB-WETH': {
+            "token_symbol":"pair",
+            "token_contract_address":"0x23DcB4EC60C2eC19131A5022b6B6dA1c7E6b7bEF",
+            "decimals": 18
+        },'ZRX-TRB': {
+            "token_symbol":"pair",
+            "token_contract_address":"0xAA9D0d9FbE9D88cD0D73d26D789c431d36Abb153",
+            "decimals": 18
+        },'WETH-ZRX': {
+            "token_symbol":"pair",
+            "token_contract_address":"0x869e10916560F2c4878C03DAD091F6b54De5c033",
+            "decimals": 18
         }
-        // 'DAI-WETH': {
-        //     "token_symbol":"pair",
-        //     "token_contract_address":"0x00cBb399cA7Ba0d64A0aD3d01e6ffd01ecBACFAf",
-        //     "decimals": 18
-        // },
-        // ,'TRB-ETH': {
-        //     "token_symbol":"pair",
-        //     "token_contract_address":"0x4763487b0d43747F9715eCeE5e85861d61DC338c",
-        //     "decimals": 18
-        // }
     }
 ];
 
@@ -141,17 +141,23 @@ export const TokenInfoArray = [
             "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
             "token0":"DAI",
             "token1": "TRB"
-        },
-        // 'DAI-ETH': {
-        //     "pairaddress":"0x00cBb399cA7Ba0d64A0aD3d01e6ffd01ecBACFAf",
-        //     "token0":"DAI",
-        //     "token1": "ETH"
-        // },
-        // 'TRB-ETH': {
-        //     "pairaddress":"0xC1c88DA16Cae5e0A61E665fD63129dC2b64C2E2E",
-        //     "token0":"TRB",
-        //     "token1": "ETH"
-        // }
+        },'DAI-WETH': {
+            "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
+            "token0":"DAI",
+            "token1": "WETH"
+        },'TRB-WETH': {
+            "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
+            "token0":"TRB",
+            "token1": "WETH"
+        },'ZRX-TRB': {
+            "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
+            "token0":"ZRX",
+            "token1": "TRB"
+        },'WETH-ZRX': {
+            "pairaddress":"0xc982960c79f22Fa0Cb66ffd7B15D521E9aFe22e7",
+            "token0":"WETH",
+            "token1": "ZRX"
+        }
     }
   ];
 
@@ -183,6 +189,42 @@ export const TokenInfoArray = [
             </div>
           ),
         value: 'DAI-TRB',
+    },{
+        key: 'DAI-WETH',
+        text: (
+            <div className="token-pairs-overlap">
+              <img src={DaiIcon} className="ui avatar image" alt="coin" />
+              <img src={EthIcon} className="ui avatar image overlap-image" alt="coin" /> DAI - WETH
+            </div>
+          ),
+        value: 'DAI-WETH',
+    },{
+        key: 'TRB-WETH',
+        text: (
+            <div className="token-pairs-overlap">
+              <img src={TrbIcon} className="ui avatar image" alt="coin" />
+              <img src={EthIcon} className="ui avatar image  overlap-image" alt="coin" /> TRB - WETH
+            </div>
+          ),
+        value: 'TRB-WETH',
+    },{
+        key: 'ZRX-TRB',
+        text: (
+            <div className="token-pairs-overlap">
+              <img src={ZrxIcon} className="ui avatar image" alt="coin" />
+              <img src={TrbIcon} className="ui avatar image  overlap-image" alt="coin" /> ZRX - TRB
+            </div>
+          ),
+        value: 'ZRX-TRB',
+    },{
+        key: 'WETH-ZRX',
+        text: (
+            <div className="token-pairs-overlap">
+              <img src={EthIcon} className="ui avatar image" alt="coin" />
+              <img src={ZrxIcon} className="ui avatar image  overlap-image" alt="coin" /> WETH - ZRX
+            </div>
+          ),
+        value: 'WETH-ZRX',
     }
     // ,{
     //     key: 'DAI-ETH',

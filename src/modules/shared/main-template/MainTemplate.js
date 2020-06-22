@@ -15,7 +15,7 @@ const MainTemplate = ({ children }) => (
       {children}
     </div>
     <div className="main-footer">
-      <Segment inverted vertical style={{ padding: '4em 4em', marginTop: '30px', backgroundColor: '#203a5b' }}>
+      <Segment inverted vertical className="app-footer">
         <Container>
           <Grid divided inverted stackable>
             <Grid.Row>

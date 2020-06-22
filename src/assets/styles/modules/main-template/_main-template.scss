@@ -2,7 +2,7 @@
   .main-header {
     width: 100%;
     height: 65px;
-    background-color: #203a5b;
+    background-color: $app-color;
     position: sticky;
     top: 0;
     z-index: 9000;
@@ -14,6 +14,13 @@
       display: flex;
       align-items: center;
       letter-spacing: 1.2px;
+    }
+  }
+  .main-footer {
+    .app-footer {
+      padding: 4em !important;
+      margin-top: 30px !important;
+      background-color: $app-color;
     }
   }
 }

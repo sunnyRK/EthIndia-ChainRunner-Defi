@@ -194,7 +194,6 @@ class LiquidityContainer extends Component {
 
     const token1Quantity = (token0Quantity) / (token1Price);
     console.log(token1Quantity)
-
     
     console.log(`${token1Quantity} --- ${token1Quantity}`);
     this.setState({

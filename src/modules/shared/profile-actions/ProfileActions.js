@@ -9,12 +9,12 @@ import TransactionHistory from './TransactionHistory';
 
 const ProfileActions = ({
   metamaskAddress, checkPairAddress, symbol0, symbol1,
-  checkPairBalance, reserve0, reserve1, options, handlecheckPairs,
+  checkPairBalance, reserve0, reserve1, options, handlecheckPairs, Lblocking, Tblocking
 }) => (
   <div className="profile-actions">
     <BlockUI
       tag="div"
-      blocking
+      blocking={Tblocking}
       loader={<GoogleLoader height={50} width={50} />}
     >
       <div className="card">
@@ -25,7 +25,7 @@ const ProfileActions = ({
 
     <BlockUI
       tag="div"
-      blocking
+      blocking={Lblocking}
       loader={<GoogleLoader height={50} width={50} />}
     >
       <div className="check-liquidity card">
@@ -61,7 +61,7 @@ const ProfileActions = ({
 
     <BlockUI
       tag="div"
-      blocking
+      blocking={Tblocking}
       loader={<GoogleLoader height={50} width={50} />}
     >
       <div className="transaction-history-wrapper card">

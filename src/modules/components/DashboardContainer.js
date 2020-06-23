@@ -10,8 +10,8 @@ class DashboardContainer extends Component {
       networkType = type
     });
     console.log(networkType);
-    if(networkType != "rinkeby"){
-      alert("Change network " + networkType + " to rinkeby");
+    if(networkType != "rinkeby") {
+      alert("Network Error: Change network " + networkType + " to rinkeby");
     }
     window.ethereum.enable();
   }

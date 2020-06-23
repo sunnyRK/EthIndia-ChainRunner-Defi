@@ -18,8 +18,6 @@ class LiquidityContainer extends Component {
     super(props);
     this.state = {
       addLiquidityPair: '',
-      addLiquidityLoading: false,
-      removeLiquidityLoading: false,
       routeraddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       liquidityToken0: '',
       liquidityToken1: '',
@@ -30,6 +28,8 @@ class LiquidityContainer extends Component {
       minValue: 0,
       amountInBalanceText1: '0',
       amountInBalanceText2: '0',
+      Ablocking: false,
+      Rblocking: false
     };
   }
 
@@ -56,17 +56,22 @@ class LiquidityContainer extends Component {
   removeLiquidity = async (event) => {
     event.preventDefault();
     try {
-      this.setState({ removeLiquidityLoading: true });
+      this.setState({ Rblocking: true });
       const accounts = await web3.eth.getAccounts();
       const erc20ContractInstance1 = await getERCContractInstance(web3, this.state.removeTokenPair);
       const poolTokenBalance = await erc20ContractInstance1.methods.balanceOf(accounts[0]).call();
-      if (parseInt(poolTokenBalance) >= parseInt(this.state.removeLiquidityTokenAmount)) {
+
+      const removeValinether = web3.utils.fromWei(this.state.removeLiquidityTokenAmount.toString(), 'ether');
+      const removeValinWei = web3.utils.toWei(removeValinether.toString(), 'ether');
+
+      if (parseInt(poolTokenBalance) >= removeValinWei) {
         const allowancePair = await erc20ContractInstance1.methods.allowance(accounts[0], this.state.routeraddress).call();
 
-        if (parseInt(allowancePair) < parseInt(this.state.removeLiquidityTokenAmount)) {
+        if (parseInt(allowancePair) < removeValinWei) {
+
           await erc20ContractInstance1.methods.approve(
             this.state.routeraddress,
-            parseInt(this.state.removeLiquidityTokenAmount),
+            web3.utils.toWei(removeValinether.toString(), 'ether')
           ).send({
             from: accounts[0],
           });
@@ -76,7 +81,7 @@ class LiquidityContainer extends Component {
         await routeContractInstance.methods.removeLiquidity(
           TokenInfoArray[0][this.state.liquidityToken0].token_contract_address,
           TokenInfoArray[0][this.state.liquidityToken1].token_contract_address,
-          parseInt(this.state.removeLiquidityTokenAmount),
+          web3.utils.toWei(removeValinether.toString(), 'ether'),
           this.state.minValue,
           this.state.minValue,
           accounts[0],
@@ -84,18 +89,18 @@ class LiquidityContainer extends Component {
         ).send({
           from: accounts[0],
         });
-        this.setState({ removeLiquidityLoading: false });
+        this.setState({Rblocking: false });
         toast.success('Successfully removed liquidity!!', {
           position: toast.POSITION.TOP_RIGHT,
         });
       } else {
-        toast.error(`You don't have ${this.state.removeLiquidityTokenAmount} liquidity to remove. Please enter valid liquidity!!`, {
+        toast.error(`You don't have ${web3.utils.toWei(this.state.removeLiquidityTokenAmount.toString(), 'ether')} liquidity to remove. Please enter valid liquidity!!`, {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
-      this.setState({ removeLiquidityLoading: false });
+      this.setState({Rblocking: false });
     } catch (error) {
-      this.setState({ removeLiquidityLoading: false });
+      this.setState({Rblocking: false });
       console.log(error);
     }
   };
@@ -103,45 +108,50 @@ class LiquidityContainer extends Component {
   addLiquidity = async () => {
     event.preventDefault();
     try {
-      this.setState({ addLiquidityLoading: true });
+      this.setState({Ablocking: true });
+
+      const add0 = web3.utils.toWei(this.state.addLiquidityamount0.toString(), 'ether');
+      const add1 = web3.utils.toWei(this.state.addLiquidityamount1.toString(), 'ether');
+
       const accounts = await web3.eth.getAccounts();
       const erc20ContractInstance1 = await getERCContractInstance(web3, this.state.liquidityToken0);
       const erc20ContractInstance2 = await getERCContractInstance(web3, this.state.liquidityToken1);
       const balance0 = await erc20ContractInstance1.methods.balanceOf(accounts[0]).call();
       const balance1 = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
-      console.log('balance0: ', balance0/1e18);
-      console.log('balance00: ', this.state.addLiquidityamount0);
-      console.log('balance1: ', balance1/1e18);
-      console.log('balance11: ', this.state.addLiquidityamount1);
-      if (parseInt(balance0) >= parseInt(this.state.addLiquidityamount0) && parseInt(this.state.addLiquidityamount0) > parseInt(this.state.minValue)) {
-        if (parseInt(balance1) >= parseInt(this.state.addLiquidityamount1) && parseFloat(this.state.addLiquidityamount1) > parseInt(this.state.minValue)) {
+
+      // const allownce1 = await erc20ContractInstance1.methods.allowance(accounts[0], "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D").call();
+      // const allownce2 = await erc20ContractInstance2.methods.allowance(accounts[0], "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D").call();
+
+      if (parseInt(balance0) >= add0 && add0 > parseInt(this.state.minValue)) {
+        if (parseInt(balance1) >= add1 && add1 > parseInt(this.state.minValue)) {
           const allowanceToken0 = await erc20ContractInstance1.methods.allowance(accounts[0], this.state.routeraddress).call();
           const allowanceToken1 = await erc20ContractInstance2.methods.allowance(accounts[0], this.state.routeraddress).call();
-          if (parseInt(allowanceToken0) < parseInt(this.state.addLiquidityamount0)) {
+
+          if(parseInt(allowanceToken0) < add0) {
             await erc20ContractInstance1.methods.approve(
               this.state.routeraddress,
-              parseInt(this.state.addLiquidityamount0),
+              web3.utils.toWei(this.state.addLiquidityamount0.toString(), 'ether'),
             ).send({
               from: accounts[0],
             });
           }
 
-          if (parseInt(allowanceToken1) < parseInt(this.state.addLiquidityamount1)) {
+          if(parseInt(allowanceToken1) < add1) {
+
             await erc20ContractInstance2.methods.approve(
               this.state.routeraddress,
-              parseInt(this.state.addLiquidityamount1),
+              web3.utils.toWei(this.state.addLiquidityamount1.toString(), 'ether'),
             ).send({
               from: accounts[0],
             });
           }
+
           const routeContractInstance = await getUniswapV2Router02(web3);
           await routeContractInstance.methods.addLiquidity(
             TokenInfoArray[0][this.state.liquidityToken0].token_contract_address,
             TokenInfoArray[0][this.state.liquidityToken1].token_contract_address,
-            // new BN(parseInt(this.state.addLiquidityamount0)).times(10 ** 18),
-            // new BN(parseInt(this.state.addLiquidityamount1)).times(10 ** 18),
-            parseInt(this.state.addLiquidityamount0),
-            parseInt(this.state.addLiquidityamount1),
+            web3.utils.toWei(this.state.addLiquidityamount0.toString(), 'ether'),
+            web3.utils.toWei(this.state.addLiquidityamount1.toString(), 'ether'),
             this.state.minValue,
             this.state.minValue,
             accounts[0],
@@ -152,21 +162,21 @@ class LiquidityContainer extends Component {
           toast.success('Successfully added liquidity!!', {
             position: toast.POSITION.TOP_RIGHT,
           });
-          this.setState({ addLiquidityLoading: false });
+          this.setState({Ablocking: false });
         } else {
-          this.setState({ addLiquidityLoading: false });
+          this.setState({Ablocking: false });
           toast.error(`Insufficeient ${this.state.liquidityToken0} balance or add valid value in wei!`, {
             position: toast.POSITION.TOP_RIGHT,
           });
         }
       } else {
-        this.setState({ addLiquidityLoading: false });
+        this.setState({Ablocking: false });
         toast.error(`Insufficeient ${this.state.liquidityToken1} balance or add valid value in wei!`, {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
     } catch (error) {
-      this.setState({ addLiquidityLoading: false });
+      this.setState({Ablocking: false });
       console.log(error);
     }
   };
@@ -189,8 +199,14 @@ class LiquidityContainer extends Component {
 
     // const token1Quantity = (token0Quantity * 1e18) / (token1Price * 1e18);
 
+    
+    // let add0 = web3.utils.toWei(this.state.addLiquidityamount0.toString(), 'ether');
+    
+    console.log(token0Price)
+    console.log(token1Price)
+
     const token0Quantity = (token0Price) * (parseInt(this.state.addLiquidityamount0));
-    console.log(token0Quantity)
+    console.log("token0Quantity ",token0Quantity)
 
     const token1Quantity = (token0Quantity) / (token1Price);
     console.log(token1Quantity)
@@ -200,10 +216,6 @@ class LiquidityContainer extends Component {
       addLiquidityamount1: token1Quantity,
     });
 
-    // console.log(`${token1Quantity / 1e18} --- ${token1Quantity}`);
-    // this.setState({
-    //   addLiquidityamount1: token1Quantity / 1e18,
-    // });
   }
 
   handleLiquidityPairs = async (e, { value }) => {
@@ -282,9 +294,9 @@ class LiquidityContainer extends Component {
 
   render() {
     const {
-      addLiquidityPair, addLiquidityamount0, addLiquidityamount1, addLiquidityLoading,
-      removeTokenPair, removeLiquidityTokenAmount, removeLiquidityLoading, 
-      amountInBalanceText1, amountInBalanceText2, liquidityToken0, liquidityToken1,
+      addLiquidityPair, addLiquidityamount0, addLiquidityamount1,
+      removeTokenPair, removeLiquidityTokenAmount, 
+      amountInBalanceText1, amountInBalanceText2, liquidityToken0, liquidityToken1, Ablocking, Rblocking
     } = this.state;
     return (
       <Liquidity
@@ -294,12 +306,10 @@ class LiquidityContainer extends Component {
         selectMax={this.selectMax}
         addLiquidityamount0={addLiquidityamount0}
         addLiquidityamount1={addLiquidityamount1}
-        addLiquidityLoading={addLiquidityLoading}
         removeTokenPair={removeTokenPair}
         removeLiquidityTokenAmount={removeLiquidityTokenAmount}
         handleRemovePairTokens={this.handleRemovePairTokens}
         removeLiquidity={this.removeLiquidity}
-        removeLiquidityLoading={removeLiquidityLoading}
         handleState={this.handleState}
         handleInputPair={this.handleInputPair}
         amountInBalanceText1={amountInBalanceText1}
@@ -309,6 +319,8 @@ class LiquidityContainer extends Component {
         onClearClickForAdd={this.onClearClickForAdd}
         onClearClickForRemove={this.onClearClickForRemove}
         addLiquidityPair={addLiquidityPair}
+        Ablocking={Ablocking}
+        Rblocking={Rblocking}
       />
     );
   }

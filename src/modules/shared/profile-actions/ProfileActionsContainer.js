@@ -17,16 +17,19 @@ class ProfileActionsContainer extends Component {
     this.state = {
       checkPairAddress: 'DAI-ZRX',
       checkPairBalance: '0',
-      checkbalanceLoading: false,
       symbol0: '',
       symbol1: '',
       reserve0: '0',
       reserve1: '0',
-      metamaskAddress: ''
+      metamaskAddress: '',
+      Lblocking: false,
+      Tblocking: false
     };
   }
 
   async componentDidMount() {
+    this.setState({ Tblocking: true });
+
     const accounts = await web3.eth.getAccounts();
 
     const UniV2PairAddress = this.state.checkPairAddress;
@@ -61,14 +64,15 @@ class ProfileActionsContainer extends Component {
       reserve1: res1,
       symbol0,
       symbol1,
-      metamaskAddress: accounts[0]
+      metamaskAddress: accounts[0],
+      Tblocking: false
     });
   }
 
   checkPoolTokenPair = async () => {
     event.preventDefault();
     try {
-      this.setState({ checkbalanceLoading: true });
+      this.setState({ Lblocking: true });
       const accounts = await web3.eth.getAccounts();
       const UniV2PairAddress = this.state.checkPairAddress;
       const pairInstance = await getUniswapV2Pair(web3, PairInfoArray[0][this.state.checkPairAddress].pairaddress);
@@ -101,9 +105,9 @@ class ProfileActionsContainer extends Component {
         symbol0,
         symbol1,
       });
-      this.setState({ checkbalanceLoading: false });
+      this.setState({ Lblocking: false });
     } catch (error) {
-      this.setState({ checkbalanceLoading: false });
+      this.setState({ Lblocking: false });
       console.log(error);
     }
   };
@@ -115,7 +119,9 @@ class ProfileActionsContainer extends Component {
   };
 
   render() {
-    const { reserve1, reserve0, symbol1, symbol0, checkPairBalance, checkPairAddress, metamaskAddress } = this.state;
+    const { reserve1, reserve0, symbol1, symbol0, checkPairBalance, checkPairAddress, 
+      metamaskAddress, Tblocking, Lblocking }
+     = this.state;
     return (
       <ProfileActions
         options={tagOptions}
@@ -127,6 +133,8 @@ class ProfileActionsContainer extends Component {
         checkPairAddress={checkPairAddress}
         handlecheckPairs={this.handlecheckPairs}
         metamaskAddress={metamaskAddress}
+        Lblocking={Lblocking}
+        Tblocking={Tblocking}
       />
     );
   }

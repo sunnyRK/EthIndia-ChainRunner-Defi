@@ -8,17 +8,17 @@ import GoogleLoader from '../../shared/GoogleLoader';
 
 const Liquidity = ({
   addLiquidityPair, addLiquidity, tagOptions, handleLiquidityPairs,
-  addLiquidityamount0, addLiquidityamount1,
-  addLiquidityLoading, selectMax, removeTokenPair,
+  addLiquidityamount0, addLiquidityamount1, selectMax, removeTokenPair,
   handleRemovePairTokens, removeLiquidityTokenAmount,
-  removeLiquidity, removeLiquidityLoading, handleState,
+  removeLiquidity, handleState,
   handleInputPair, amountInBalanceText1, amountInBalanceText2, 
-  liquidityToken0, liquidityToken1, onClearClickForAdd, onClearClickForRemove
+  liquidityToken0, liquidityToken1, onClearClickForAdd, onClearClickForRemove,
+  Ablocking, Rblocking 
 }) => (
     <div className="liquidity">
       <BlockUI
         tag="div"
-        blocking
+        blocking={Ablocking}
         loader={<GoogleLoader height={50} width={50} />}
       >
         <div className="add-liquidity card">
@@ -62,6 +62,8 @@ const Liquidity = ({
                 });
               }}
               disabled
+              // 270814888731009415
+              // 299231134878193660
             />
             <label className="total">Total {liquidityToken1} Balance: {amountInBalanceText2}({amountInBalanceText2/1000000000000000000}) in WEI</label>
           </div>
@@ -73,7 +75,6 @@ const Liquidity = ({
             </Button>
             <Button
               type="submit"
-              loading={addLiquidityLoading}
               primary
               style={{ backgroundColor: '#2d507d' }}
               onClick={addLiquidity}
@@ -86,7 +87,7 @@ const Liquidity = ({
 
       <BlockUI
         tag="div"
-        blocking
+        blocking={Rblocking}
         loader={<GoogleLoader height={50} width={50} />}
       >
         <div className="remove-liquidity card">
@@ -144,7 +145,6 @@ const Liquidity = ({
             <Button
               bsStyle="primary"
               type="submit"
-              loading={removeLiquidityLoading}
               primary
               onClick={(event) => removeLiquidity(event)}
               style={{ backgroundColor: '#2d507d' }}

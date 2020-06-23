@@ -7,13 +7,13 @@ import GoogleLoader from '../../shared/GoogleLoader';
 const Trade = ({
   swapExactTokensForTokens, tradePairTokens, tagOptions,
   handlePairs, pairTokens, handlePairTokens, amountSwapDesired,
-  handleInputPrice, tradeLoading, amountOut, slippage, handleState,
-  onClearClick, tellorRate, amountInBalanceText, token0, reserve0
+  handleInputPrice, amountOut, slippage, handleState,
+  onClearClick, tellorRate, amountInBalanceText, token0, reserve0, blocking
 }) => (
   <BlockUI
     tag="div"
-    blocking
-    loader={<GoogleLoader height={50} width={50} />}
+    blocking={blocking}
+    loader={<GoogleLoader height={50} width={50}/>}
   >
     <div className="card trade">
       <h3>Automate Trade</h3>
@@ -102,7 +102,6 @@ const Trade = ({
           color="blue"
           bsStyle="primary"
           type="submit"
-          loading={tradeLoading}
           onClick={(event) => swapExactTokensForTokens(event)}
           style={{ backgroundColor: '#2d507d' }}
         >

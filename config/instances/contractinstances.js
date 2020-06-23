@@ -189,25 +189,28 @@ export const TokenInfoArray = [
             </div>
           ),
         value: 'DAI-TRB',
-    },{
-        key: 'DAI-WETH',
-        text: (
-            <div className="token-pairs-overlap">
-              <img src={DaiIcon} className="ui avatar image" alt="coin" />
-              <img src={EthIcon} className="ui avatar image overlap-image" alt="coin" /> DAI - WETH
-            </div>
-          ),
-        value: 'DAI-WETH',
-    },{
-        key: 'TRB-WETH',
-        text: (
-            <div className="token-pairs-overlap">
-              <img src={TrbIcon} className="ui avatar image" alt="coin" />
-              <img src={EthIcon} className="ui avatar image  overlap-image" alt="coin" /> TRB - WETH
-            </div>
-          ),
-        value: 'TRB-WETH',
-    },{
+    },
+    // {
+    //     key: 'DAI-WETH',
+    //     text: (
+    //         <div className="token-pairs-overlap">
+    //           <img src={DaiIcon} className="ui avatar image" alt="coin" />
+    //           <img src={EthIcon} className="ui avatar image overlap-image" alt="coin" /> DAI - WETH
+    //         </div>
+    //       ),
+    //     value: 'DAI-WETH',
+    // },
+    // {
+    //     key: 'TRB-WETH',
+    //     text: (
+    //         <div className="token-pairs-overlap">
+    //           <img src={TrbIcon} className="ui avatar image" alt="coin" />
+    //           <img src={EthIcon} className="ui avatar image  overlap-image" alt="coin" /> TRB - WETH
+    //         </div>
+    //       ),
+    //     value: 'TRB-WETH',
+    // },
+    {
         key: 'ZRX-TRB',
         text: (
             <div className="token-pairs-overlap">
@@ -216,15 +219,16 @@ export const TokenInfoArray = [
             </div>
           ),
         value: 'ZRX-TRB',
-    },{
-        key: 'WETH-ZRX',
-        text: (
-            <div className="token-pairs-overlap">
-              <img src={EthIcon} className="ui avatar image" alt="coin" />
-              <img src={ZrxIcon} className="ui avatar image  overlap-image" alt="coin" /> WETH - ZRX
-            </div>
-          ),
-        value: 'WETH-ZRX',
-    } 
+    }
+    // ,{
+    //     key: 'WETH-ZRX',
+    //     text: (
+    //         <div className="token-pairs-overlap">
+    //           <img src={EthIcon} className="ui avatar image" alt="coin" />
+    //           <img src={ZrxIcon} className="ui avatar image  overlap-image" alt="coin" /> WETH - ZRX
+    //         </div>
+    //       ),
+    //     value: 'WETH-ZRX',
+    // } 
   ];
   

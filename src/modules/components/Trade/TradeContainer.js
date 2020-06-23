@@ -49,11 +49,8 @@ class TradeContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tradeLoading: false,
-      addLiquidityLoading: false,
-      removeLiquidityLoading: false,
-      updateLoading: false,
       amountSwapDesired: '',
+      swapValinWei: 0,
       amountInBalanceText: '0',
       reserve0: '0',
       amountOut: '',
@@ -67,7 +64,9 @@ class TradeContainer extends Component {
       routeraddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       slippage: '',
       // tellorRate: '',
-      exceeds: false
+      exceeds: false,
+      blocking:false
+
     };
   }
 
@@ -87,6 +86,7 @@ class TradeContainer extends Component {
     const token0Price = parseInt(price1[1]) / 1000000;
     const token1Price = parseInt(price2[1]) / 1000000;
 
+    // const token0Quantity = (token0Price * 1e18) * this.state.swapValinWei;
     const token0Quantity = (token0Price * 1e18) * (parseInt(this.state.amountSwapDesired));
 
     const token1Quantity = (token0Quantity * 1e18) / (token1Price * 1e18);
@@ -100,7 +100,13 @@ class TradeContainer extends Component {
     const slippage = numerator / (token1Quantity / 1e18);
     console.log('slippage is ', slippage);
 
-    const slippage2 = `${slippage} %`;
+    let slippage2;
+    if (parseFloat(slippage) > parseFloat(0)) {
+      slippage2 = `${slippage} %`;
+    } else {
+      slippage2 = `0 %`;
+    }
+
     this.setState({
       slippage: slippage2,
       tellorRate: token1Quantity / 1e18
@@ -111,24 +117,7 @@ class TradeContainer extends Component {
     console.log(this.state.pairAddress);
     const pairInstance = await getUniswapV2Pair(web3, this.state.pairAddress);
     const reserves = await pairInstance.methods.getReserves().call();
-    console.log("reserves: ",reserves);
-
-    if(parseInt(reserves[0]) < parseInt(this.state.amountSwapDesired))
-    {
-      this.setState({
-        exceeds: true
-      });
-      alert("Value exceeds the liquidity! ")
-    } else {
-      this.setState({
-        exceeds: false
-      });
-    }
-    
-    if(!this.state.exceeds){
-      this.setState({
-        exceeds: false
-      });
+  
       const token0V2Pair = await pairInstance.methods.token0().call();
       const token1V2Pair = await pairInstance.methods.token1().call();
       const libInstance = await getUniswapV2Library(web3);
@@ -137,10 +126,10 @@ class TradeContainer extends Component {
       let amountOut;
       console.log(token0V2Pair, TokenInfoArray[0][this.state.token0].token_contract_address);
       if (token0V2Pair.toLowerCase() == TokenInfoArray[0][this.state.token0].token_contract_address.toLowerCase()) {
-        console.log(this.state.amountSwapDesired, reserves[0], reserves[1], '1');
+        console.log(this.state.swapValinWei, reserves[0], reserves[1], '1');
         amountOut = await libInstance.methods.getAmountOut(this.state.amountSwapDesired, reserves[0], reserves[1]).call();
       } else {
-        console.log(this.state.amountSwapDesired, reserves[1], reserves[0], '2');
+        console.log(this.state.swapValinWei, reserves[1], reserves[0], '2');
         amountOut = await libInstance.methods.getAmountOut(this.state.amountSwapDesired, reserves[1], reserves[0]).call();
       }
       console.log('amountout ', amountOut);
@@ -148,19 +137,21 @@ class TradeContainer extends Component {
         amountOut,
       });
       await this.calculateSLippageRateFromTellorOracle();
-    }
   }
 
   swapExactTokensForTokens = async () => {
     event.preventDefault();
     try {
-      this.setState({ shouldSwap: false, tradeLoading: true });
-
+      this.setState({ shouldSwap: false, blocking: true });
       // check if token is selelcted?
-      if(!this.state.exceeds){
+      const pairInstance = await getUniswapV2Pair(web3, this.state.pairAddress);
+      const reserves = await pairInstance.methods.getReserves().call();
+      console.log(reserves[0]);
+      console.log(this.state.swapValinWei)
+      if(parseInt(reserves[0]) >= this.state.swapValinWei) {
         if (this.state.token0 != '') {
           // check if trade value is added?
-          if (parseInt(this.state.amountSwapDesired) > 0) {
+          if (this.state.swapValinWei > 0) {
             const accounts = await web3.eth.getAccounts();
 
             if (parseInt(this.state.amountOut) >= parseInt(this.state.tellorRate)) {
@@ -174,6 +165,7 @@ class TradeContainer extends Component {
                 console.log('Slippage rate is high');
                 console.log('Slippage rate: ', this.state.slippage);
               }
+            }
 
               if (this.state.shouldSwap) {
                 // Trade will happen here
@@ -182,12 +174,12 @@ class TradeContainer extends Component {
 
                 // check balance
                 const balance = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
-                if (parseInt(balance) >= parseInt(this.state.amountSwapDesired)) {
+                if (parseInt(balance) >= this.state.swapValinWei) {
                   let allowance = await erc20ContractInstance2.methods.allowance(accounts[0], this.state.routeraddress).call();
-                  if (parseInt(allowance) < parseInt(this.state.amountSwapDesired)) {
+                  if (parseInt(allowance) < this.state.swapValinWei) {
                     await erc20ContractInstance2.methods.approve(
                       this.state.routeraddress, // Uniswap router address
-                      this.state.amountSwapDesired,
+                      web3.utils.toWei(this.state.amountSwapDesired.toString(), 'ether'),
                     ).send({
                       from: accounts[0],
                     });
@@ -197,7 +189,7 @@ class TradeContainer extends Component {
                   if (parseInt(allowance) >= parseInt(this.state.amountSwapDesired)) {
                     const routeContractInstance = await getUniswapV2Router02(web3);
                     const transactionHash = await routeContractInstance.methods.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                      this.state.amountSwapDesired,
+                      web3.utils.toWei(this.state.amountSwapDesired.toString(), 'ether'),
                       this.state.minValue,
                       [TokenInfoArray[0][this.state.token0].token_contract_address, TokenInfoArray[0][this.state.token1].token_contract_address],
                       accounts[0],
@@ -225,7 +217,7 @@ class TradeContainer extends Component {
                       })
                       .catch((err) => {
                         console.log(err);
-                        this.setState({ shouldSwap: false, tradeLoading: false });
+                        this.setState({ shouldSwap: false, blocking: false });
                       });
 
                     console.log(transactionHash);
@@ -254,7 +246,7 @@ class TradeContainer extends Component {
                   position: toast.POSITION.TOP_RIGHT,
                 });
               }
-            }
+            
           } else {
             toast.error('Please add valid value!!', {
               position: toast.POSITION.TOP_RIGHT,
@@ -270,9 +262,9 @@ class TradeContainer extends Component {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
-      this.setState({ shouldSwap: false, tradeLoading: false });
+      this.setState({ shouldSwap: false, blocking: false });
     } catch (error) {
-      this.setState({ shouldSwap: false, tradeLoading: false });
+      this.setState({ shouldSwap: false, blocking: false });
       console.log(error);
     }
   };
@@ -342,22 +334,39 @@ class TradeContainer extends Component {
     const accounts = await web3.eth.getAccounts();
     const erc20ContractInstance2 = await getERCContractInstance(web3, value);
     const amountInBalanceText = await erc20ContractInstance2.methods.balanceOf(accounts[0]).call();
-
-    
-
     this.setState({ token0: value, token1: tempToken2, amountInBalanceText });
   };
 
   handleInputPrice = async (e, { value }) => {
     if (this.state.token0 != '') {
-      this.setState({
-        amountSwapDesired: event.target.value,
-        amountOut: 'Wait...',
-        tellorRate: 'Wait...',
-        slippage: 'Wait...',
-      });
-      // const amountOut =
-      await this.getAmountOutValue();
+      // this.setState({
+      //   amountSwapDesired: event.target.value,
+      //   amountOut: 'Wait...',
+      //   tellorRate: 'Wait...',
+      //   slippage: 'Wait...',
+      // });
+
+      let swapValinWei = 0;
+      if(parseInt(event.target.value) > 0){
+        swapValinWei = web3.utils.toWei(event.target.value.toString(), 'ether');
+        this.setState({
+          amountSwapDesired: event.target.value,
+          amountOut: 'Wait...',
+          tellorRate: 'Wait...',
+          slippage: 'Wait...',
+          swapValinWei
+        });
+        await this.getAmountOutValue();
+      } else {
+        this.setState({
+          amountSwapDesired: event.target.value,
+          amountOut: '0',
+          tellorRate: '0',
+          slippage: '0',
+          swapValinWei: 0
+        });
+      }
+
     } else {
       alert('Please select token among pair.');
     }
@@ -385,8 +394,8 @@ class TradeContainer extends Component {
 
   render() {
     const {
-      tradePairTokens, pairTokens, amountSwapDesired,
-      tradeLoading, amountOut, slippage, tellorRate, amountInBalanceText, token0, reserve0
+      tradePairTokens, pairTokens, amountSwapDesired, amountOut, slippage, 
+      tellorRate, amountInBalanceText, token0, reserve0, blocking
     } = this.state;
     return (
       <Trade
@@ -395,7 +404,6 @@ class TradeContainer extends Component {
         tradePairTokens={tradePairTokens}
         pairTokens={pairTokens}
         amountSwapDesired={amountSwapDesired}
-        tradeLoading={tradeLoading}
         amountOut={amountOut}
         tellorRate={tellorRate}
         slippage={slippage}
@@ -407,6 +415,7 @@ class TradeContainer extends Component {
         amountInBalanceText={amountInBalanceText}
         token0={token0}
         reserve0={reserve0}
+        blocking={blocking}
       />
     );
   }

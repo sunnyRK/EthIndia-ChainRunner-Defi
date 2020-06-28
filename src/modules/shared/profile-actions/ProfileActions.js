@@ -6,12 +6,18 @@ import BlockUI from 'react-block-ui';
 
 import GoogleLoader from '../GoogleLoader';
 import TransactionHistory from './TransactionHistory';
+// import NetworkTypeDialogContainer from '../../components/NetworkTypeDialog/NetworkTypeDialogContainer';
 
 const ProfileActions = ({
   metamaskAddress, checkPairAddress, symbol0, symbol1,
   checkPairBalance, reserve0, reserve1, options, handlecheckPairs, Lblocking, Tblocking
 }) => (
   <div className="profile-actions">
+    
+    {/* <NetworkTypeDialogContainer
+          displayMessage={this.state.displayMessage}
+          openDialog={this.state.displayMessage}
+        /> */}
     <BlockUI
       tag="div"
       blocking={Tblocking}

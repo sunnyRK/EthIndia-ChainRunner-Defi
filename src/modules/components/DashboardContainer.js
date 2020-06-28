@@ -26,7 +26,11 @@ class DashboardContainer extends Component {
         displayMessage: '',
       });
     }
-    window.ethereum.enable();
+    this.enablewindow();
+  }
+
+  async enablewindow() {
+    await window.ethereum.enable();
   }
 
   render() {

@@ -39,7 +39,7 @@ class Transaction extends Component {
               }
             }
             this.setState({
-              items,
+              items:items.reverse(),
             }, () => {
               if (this.state.items.length == 0) {
                 this.setState({

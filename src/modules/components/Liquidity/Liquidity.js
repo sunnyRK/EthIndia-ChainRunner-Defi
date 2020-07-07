@@ -9,7 +9,7 @@ import GoogleLoader from '../../shared/GoogleLoader';
 const Liquidity = ({
   addLiquidityPair, addLiquidity, tagOptions, handleLiquidityPairs,
   addLiquidityamount0, addLiquidityamount1, selectMax, removeTokenPair,
-  handleRemovePairTokens, removeLiquidityTokenAmount,
+  handleRemovePairTokens, removeLiquidityTokenAmount, removeLiquidityBalance,
   removeLiquidity, handleState,
   handleInputPair, amountInBalanceText1, amountInBalanceText2, 
   liquidityToken0, liquidityToken1, onClearClickForAdd, onClearClickForRemove,
@@ -41,7 +41,7 @@ const Liquidity = ({
               type="input"
               // labelPosition="right"
               className="form-control"
-              placeholder="Enter value in WEI"
+              placeholder="Enter value"
               value={addLiquidityamount0}
               onChange={handleInputPair}
               fluid
@@ -54,7 +54,7 @@ const Liquidity = ({
               type="input"
               fluid
               className="form-control"
-              placeholder="Etner value in WEI"
+              placeholder="Enter value"
               value={addLiquidityamount1}
               onChange={(event) => {
                 handleState({
@@ -117,7 +117,7 @@ const Liquidity = ({
                   });
                 }}
               />
-              <label className="total">Total Your PoolBalance(Uni-V2-{removeTokenPair}):  {removeLiquidityTokenAmount} in WEI</label>
+              <label className="total">Total Your PoolBalance(Uni-V2-{removeTokenPair}):  {removeLiquidityBalance} in WEI</label>
             </div>
             <div className="button form-field set-max-button">
               <Button

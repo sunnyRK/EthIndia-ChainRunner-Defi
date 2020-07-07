@@ -54,7 +54,9 @@ class TradeContainer extends Component {
       amountInBalanceText: '0',
       reserve0: '0',
       amountOut: '',
+      amountOutWithToken: '',
       tellorRate: '',
+      tellorRateWithToken: '',
       pairTokens: [],
       token0: '',
       token1: '',
@@ -109,7 +111,8 @@ class TradeContainer extends Component {
 
     this.setState({
       slippage: slippage2,
-      tellorRate: token1Quantity / 1e18
+      tellorRate: token1Quantity / 1e18,
+      tellorRateWithToken: token1Quantity/1e18 + " " + this.state.token1
     });
   }
 
@@ -135,6 +138,7 @@ class TradeContainer extends Component {
       console.log('amountout ', amountOut);
       this.setState({
         amountOut,
+        amountOutWithToken: amountOut + " " + this.state.token1
       });
       await this.calculateSLippageRateFromTellorOracle();
   }
@@ -265,6 +269,7 @@ class TradeContainer extends Component {
         });
       }
       this.setState({ shouldSwap: false, blocking: false });
+      this.onClearClick()
     } catch (error) {
       this.setState({ shouldSwap: false, blocking: false });
       console.log(error);
@@ -354,7 +359,9 @@ class TradeContainer extends Component {
         this.setState({
           amountSwapDesired: event.target.value,
           amountOut: 'Wait...',
+          amountOutWithToken: 'Wait...',
           tellorRate: 'Wait...',
+          tellorRateWithToken: 'Wait...',
           slippage: 'Wait...',
           swapValinWei
         });
@@ -363,7 +370,9 @@ class TradeContainer extends Component {
         this.setState({
           amountSwapDesired: event.target.value,
           amountOut: '0',
+          amountOutWithToken: '0',
           tellorRate: '0',
+          tellorRateWithToken: '0',
           slippage: '0',
           swapValinWei: 0
         });
@@ -385,7 +394,9 @@ class TradeContainer extends Component {
       tradePairTokens: '',
       amountSwapDesired: '',
       amountOut: '',
+      amountOutWithToken: '',
       tellorRate: '',
+      tellorRateWithToken: '',
       slippage: '',
       amountInBalanceText: '0',
       token0: '',
@@ -397,7 +408,7 @@ class TradeContainer extends Component {
   render() {
     const {
       tradePairTokens, pairTokens, amountSwapDesired, amountOut, slippage, 
-      tellorRate, amountInBalanceText, token0, reserve0, blocking
+      tellorRate, amountInBalanceText, token0, reserve0, blocking, tellorRateWithToken, amountOutWithToken
     } = this.state;
     return (
       <Trade
@@ -407,7 +418,9 @@ class TradeContainer extends Component {
         pairTokens={pairTokens}
         amountSwapDesired={amountSwapDesired}
         amountOut={amountOut}
+        amountOutWithToken={amountOutWithToken}
         tellorRate={tellorRate}
+        tellorRateWithToken={tellorRateWithToken}
         slippage={slippage}
         swapExactTokensForTokens={this.swapExactTokensForTokens}
         handlePairs={this.handlePairs}

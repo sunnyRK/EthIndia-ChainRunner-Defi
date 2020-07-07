@@ -25,6 +25,7 @@ class LiquidityContainer extends Component {
       addLiquidityamount1: '',
       removeTokenPair: '',
       removeLiquidityTokenAmount: '',
+      removeLiquidityBalance: '',
       minValue: 0,
       amountInBalanceText1: '0',
       amountInBalanceText2: '0',
@@ -99,6 +100,7 @@ class LiquidityContainer extends Component {
         });
       }
       this.setState({Rblocking: false });
+      this.onClearClickForRemove();
     } catch (error) {
       this.setState({Rblocking: false });
       console.log(error);
@@ -165,16 +167,17 @@ class LiquidityContainer extends Component {
           this.setState({Ablocking: false });
         } else {
           this.setState({Ablocking: false });
-          toast.error(`Insufficeient ${this.state.liquidityToken0} balance or add valid value in wei!`, {
+          toast.error(`Insufficeient ${this.state.liquidityToken0} balance or add valid value!`, {
             position: toast.POSITION.TOP_RIGHT,
           });
         }
       } else {
         this.setState({Ablocking: false });
-        toast.error(`Insufficeient ${this.state.liquidityToken1} balance or add valid value in wei!`, {
+        toast.error(`Insufficeient ${this.state.liquidityToken1} balance or add valid value!`, {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
+      this.onClearClickForAdd();
     } catch (error) {
       this.setState({Ablocking: false });
       console.log(error);
@@ -241,7 +244,7 @@ class LiquidityContainer extends Component {
     const erc20ContractInstance1 = await getERCContractInstance(web3, value);
     const poolTokenBalance = await erc20ContractInstance1.methods.balanceOf(accounts[0]).call();
     this.setState({
-      removeLiquidityTokenAmount: poolTokenBalance,
+      removeLiquidityBalance: poolTokenBalance,
     });
 
     this.setState({
@@ -279,7 +282,6 @@ class LiquidityContainer extends Component {
       liquidityToken1: '',
       addLiquidityamount0: '',
       addLiquidityamount1: '',
-
     });
   }
 
@@ -296,7 +298,7 @@ class LiquidityContainer extends Component {
     const {
       addLiquidityPair, addLiquidityamount0, addLiquidityamount1,
       removeTokenPair, removeLiquidityTokenAmount, 
-      amountInBalanceText1, amountInBalanceText2, liquidityToken0, liquidityToken1, Ablocking, Rblocking
+      amountInBalanceText1, amountInBalanceText2, liquidityToken0, liquidityToken1, Ablocking, Rblocking, removeLiquidityBalance
     } = this.state;
     return (
       <Liquidity
@@ -307,6 +309,7 @@ class LiquidityContainer extends Component {
         addLiquidityamount0={addLiquidityamount0}
         addLiquidityamount1={addLiquidityamount1}
         removeTokenPair={removeTokenPair}
+        removeLiquidityBalance={removeLiquidityBalance}
         removeLiquidityTokenAmount={removeLiquidityTokenAmount}
         handleRemovePairTokens={this.handleRemovePairTokens}
         removeLiquidity={this.removeLiquidity}

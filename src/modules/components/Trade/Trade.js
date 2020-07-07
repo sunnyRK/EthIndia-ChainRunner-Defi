@@ -7,7 +7,7 @@ import GoogleLoader from '../../shared/GoogleLoader';
 const Trade = ({
   swapExactTokensForTokens, tradePairTokens, tagOptions,
   handlePairs, pairTokens, handlePairTokens, amountSwapDesired,
-  handleInputPrice, amountOut, slippage, handleState,
+  handleInputPrice, amountOut, slippage, handleState, amountOutWithToken, tellorRateWithToken,
   onClearClick, tellorRate, amountInBalanceText, token0, reserve0, blocking
 }) => (
   <BlockUI
@@ -46,7 +46,7 @@ const Trade = ({
           color="teal"
           type="input"
           fluid
-          placeholder="Add value in Wei"
+          placeholder="Add value"
           value={amountSwapDesired}
           onChange={handleInputPrice}
         />
@@ -59,9 +59,9 @@ const Trade = ({
         <Input
           type="input"
           className="form-control"
-          value={amountOut}
+          value={amountOutWithToken}
           onChange={(event) => {
-            handleState({ amountOut: event.target.value });
+            handleState({ amountOutWithToken: event.target.value });
           }}
           disabled
         />
@@ -71,9 +71,9 @@ const Trade = ({
         <Input
           type="input"
           className="form-control"
-          value={tellorRate}
+          value={tellorRateWithToken}
           onChange={(event) => {
-            handleState({ tellorRate: event.target.value });
+            handleState({ tellorRateWithToken: event.target.value });
           }}
           disabled
         />

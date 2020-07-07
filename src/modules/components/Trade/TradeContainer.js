@@ -154,7 +154,9 @@ class TradeContainer extends Component {
           if (this.state.swapValinWei > 0) {
             const accounts = await web3.eth.getAccounts();
 
-            if (parseInt(this.state.amountOut) >= parseInt(this.state.tellorRate)) {
+            console.log(this.state.amountOut);
+            console.log(this.state.tellorRate);
+            if (parseFloat(this.state.amountOut) >= parseFloat(this.state.tellorRate)) {
               // trade directly
               console.log('All set to go');
               this.setState({ shouldSwap: true });
